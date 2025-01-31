@@ -5,22 +5,44 @@
     "cdk-hono": "bin/cdk-hono.js"
   },
   "scripts": {
+    "dev": "dotenv -e .env -e .env.dev -- ts-node ./src/index.ts",
+    "dev:watch": "dotenv -e .env -e .env.dev -- nodemon ./src/index.ts",
+    "dev:watch:prod": "dotenv -e .env -e .env.prod -- nodemon ./src/index.ts",
+    "prisma:generate": "prisma generate",
+    "db:prod:migrate:create": "dotenv -e .env -e .env.prod -- prisma migrate dev",
+    "db:prod:migrate:deploy": "dotenv -e .env -e .env.prod -- prisma migrate deploy",
+    "db:dev:migrate:create": "dotenv -e .env -e .env.dev -- prisma migrate dev",
+    "db:dev:migrate:deploy": "dotenv -e .env -e .env.dev -- prisma migrate deploy",
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
-    "cdk": "cdk"
+    "cdk": "cdk",
+    "cdk:bootstrap": "dotenv -e .env -- cdk bootstrap",
+    "cdk:deploy:prod": "dotenv -e .env -e .env.prod -- cdk deploy Prod/*",
+    "cdk:destroy:prod": "dotenv -e .env -e .env.prod -- cdk destroy Prod/*",
+    "cdk:deploy:dev": "dotenv -e .env -e .env.dev -- cdk deploy Dev/*",
+    "cdk:destroy:dev": "dotenv -e .env -e .env.dev -- cdk destroy Dev/*",
+    "ga:deploy:prod": "cdk deploy Prod/* --require-approval never",
+    "ga:deploy:dev": "cdk deploy Dev/* --require-approval never"
   },
   "devDependencies": {
+    "@hono/node-server": "^1.13.7",
     "@types/jest": "^29.5.14",
     "@types/node": "22.7.9",
-    "jest": "^29.7.0",
-    "ts-jest": "^29.2.5",
+    "@types/nodemon": "^1.19.6",
     "aws-cdk": "2.177.0",
+    "dotenv-cli": "^8.0.0",
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.9",
+    "prisma": "^6.3.0",
+    "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
     "typescript": "~5.6.3"
   },
   "dependencies": {
+    "@prisma/client": "^6.3.0",
     "aws-cdk-lib": "2.177.0",
-    "constructs": "^10.0.0"
+    "constructs": "^10.0.0",
+    "hono": "^4.6.19"
   }
 }
