@@ -1,13 +1,9 @@
-import { sign, jwt, type JwtVariables } from 'hono/jwt'
-import { UseConfig } from './useConfig.util'
-import { PrismaClient, type User } from '@prisma/client'
-import { type Context, type Next } from 'hono'
-import { BlankInput } from 'hono/types'
+import { sign, jwt } from 'hono/jwt'
+import { PrismaClient } from '@prisma/client'
 import { createMiddleware } from 'hono/factory'
-
-interface HonoVariables extends JwtVariables {
-  currentUser: Omit<User, 'password'>
-}
+import * as bcrypt from 'bcryptjs'
+import { UseConfig } from './useConfig.util'
+import { AppContextType } from '../types'
 
 export class UseAuth {
   private config: UseConfig
@@ -23,13 +19,17 @@ export class UseAuth {
     }
     return await sign(payload, this.config.jwtSecret)
   }
-  public getJwt = createMiddleware<{ Variables: HonoVariables }>(
+  public getJwt = createMiddleware<{ Variables: AppContextType }>(
     async (c, next) => {
       const jwtMiddleware = jwt({ secret: this.config.jwtSecret })
       return jwtMiddleware(c, next)
     }
   )
-  public retrieveUserInfo = createMiddleware<{ Variables: HonoVariables }>(
+  public hashPassword = async (password: string) => {
+    const salt = await bcrypt.genSalt(10)
+    return await bcrypt.hash(password, salt)
+  }
+  public retrieveUserInfo = createMiddleware<{ Variables: AppContextType }>(
     async (c, next) => {
       try {
         const user = c.get('jwtPayload')
