@@ -5,7 +5,9 @@ import { serve } from '@hono/node-server'
 import { bearerAuth } from 'hono/bearer-auth'
 import { type JwtVariables } from 'hono/jwt'
 import { getSignedCookie, setSignedCookie } from 'hono/cookie'
+import { appendTrailingSlash } from 'hono/trailing-slash'
 import { UseAuth, UseConfig } from './utils'
+import { userModule } from './user/user.module'
 
 const useAuth = new UseAuth()
 const useConfig = new UseConfig()
@@ -16,6 +18,7 @@ const app = new Hono<{ Variables: JwtVariables }>()
 const token = 'piopio'
 app
   .use(prettyJSON())
+  .use(appendTrailingSlash())
   .get('/', (e) => {
     return e.json({ message: 'Hello from pollito!' }, 200)
   })
@@ -46,6 +49,7 @@ app
     console.log(authHeader)
     return e.json({ message: 'pollito says pip' }, 201)
   })
+  .route('/api/user', userModule.setRoute())
 
 if (NODE_ENV !== 'production') {
   serve(
