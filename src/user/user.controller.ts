@@ -2,7 +2,7 @@ import { Hono } from 'hono'
 import { zValidator } from '@hono/zod-validator'
 import { UseAuth } from '../utils'
 import { AppContextType } from '../types'
-import { signupUserInputSchema } from './dto'
+import { signupUserInputSchema, pwUpdateInputSchema } from './dto'
 import { UserService } from './user.service'
 
 export class UserController {
@@ -17,7 +17,7 @@ export class UserController {
   public setRoute = () => {
     return this.app
       .get('/', async (c) => {
-        return c.json({ message: 'hello from pollito pio!' }, 200)
+        return await this.userService.helloFromPollito(c)
       })
       .post(
         '/signup/',
@@ -25,6 +25,16 @@ export class UserController {
         async (c) => {
           const body = c.req.valid('json')
           return await this.userService.signupUser(c, body)
+        }
+      )
+      .put(
+        '/change-password/',
+        this.useAuth.getJwt,
+        zValidator('json', pwUpdateInputSchema),
+        async (c) => {
+          const body = c.req.valid('json')
+          const token = c.get('jwtPayload')
+          return await this.userService.updatePassword(c, body, token)
         }
       )
   }

@@ -1,0 +1,153 @@
+import { PrismaClient, User } from '@prisma/client'
+import type { Context } from 'hono'
+import type {
+  ProfileUsernameUpdateInput,
+  ProfileDescriptionUpdateInput,
+} from './dto'
+
+export class ProfileService {
+  private prisma: PrismaClient
+  constructor() {
+    this.prisma = new PrismaClient()
+  }
+  public getProfileList = async (ctx: Context) => {
+    try {
+      const profileList = await this.prisma.profile.findMany()
+      return ctx.json(profileList, 200)
+    } catch (error) {
+      throw ctx.json({ message: 'Internal server error' }, 500)
+    }
+  }
+  public getCurrentUserProfile = async (
+    ctx: Context,
+    user: Omit<User, 'password'>
+  ) => {
+    try {
+      const currentUserProfile = await this.prisma.profile.findUnique({
+        where: { user_id: user.id },
+        include: {
+          posts: true,
+          followed_by: true,
+          following: true,
+          liked_posts: true,
+          liked_comments: true,
+        },
+      })
+      if (!currentUserProfile) return ctx.json({ message: 'Not found' }, 404)
+      return ctx.json(currentUserProfile, 200)
+    } catch (error) {
+      throw ctx.json({ message: 'Internal server error' }, 500)
+    }
+  }
+  public getProfileById = async (ctx: Context, id: string) => {
+    try {
+      const userProfile = await this.prisma.profile.findFirst({
+        where: { id: parseInt(id) },
+        include: {
+          posts: true,
+          followed_by: true,
+          following: true,
+          liked_posts: true,
+          liked_comments: true,
+        },
+      })
+      if (!userProfile) return ctx.json({ message: 'Not found' }, 404)
+      return ctx.json(userProfile, 200)
+    } catch (error) {
+      throw ctx.json({ message: 'Internal server error' }, 500)
+    }
+  }
+  public updateUsername = async (
+    ctx: Context,
+    body: ProfileUsernameUpdateInput,
+    user: Omit<User, 'password'>
+  ) => {
+    try {
+      const { username } = body
+      const currentUserProfile = await this.prisma.profile.findUnique({
+        where: { user_id: user.id },
+      })
+      if (!currentUserProfile) return ctx.json({ message: 'Not found' }, 404)
+      await this.prisma.profile.update({
+        where: { id: currentUserProfile.id },
+        data: { username },
+      })
+      return ctx.json({ message: 'Successfully updated profile' }, 201)
+    } catch (error) {
+      throw ctx.json({ message: 'Internal server error' }, 500)
+    }
+  }
+  public updateProfileDescription = async (
+    ctx: Context,
+    body: ProfileDescriptionUpdateInput,
+    user: Omit<User, 'password'>
+  ) => {
+    try {
+      const { description } = body
+      const currentUserProfile = await this.prisma.profile.findUnique({
+        where: { user_id: user.id },
+      })
+      if (!currentUserProfile) return ctx.json({ message: 'Not found' }, 404)
+      await this.prisma.profile.update({
+        where: { id: currentUserProfile.id },
+        data: { profile_description: description },
+      })
+      return ctx.json({ message: 'Successfully updated profile' }, 201)
+    } catch (error) {
+      throw ctx.json({ message: 'Internal server error' }, 500)
+    }
+  }
+  // TODO: add profile image update
+  public followUser = async (
+    ctx: Context,
+    user: Omit<User, 'password'>,
+    id: string
+  ) => {
+    try {
+      const currentUserProfile = await this.prisma.profile.findUnique({
+        where: { user_id: user.id },
+      })
+      if (!currentUserProfile) return ctx.json({ message: 'Not found' }, 404)
+      const targetUserProfile = await this.prisma.profile.findFirst({
+        where: { id: parseInt(id) },
+      })
+      if (!targetUserProfile) return ctx.json({ message: 'Not found' }, 404)
+      await this.prisma.follow.create({
+        data: {
+          followed_by_id: currentUserProfile.id,
+          following_id: targetUserProfile.id,
+        },
+      })
+      return ctx.json({ message: 'Successfully followed user.' }, 201)
+    } catch (error) {
+      throw ctx.json({ message: 'Internal server error' }, 500)
+    }
+  }
+  public unfollowUser = async (
+    ctx: Context,
+    user: Omit<User, 'password'>,
+    id: string
+  ) => {
+    try {
+      const currentUserProfile = await this.prisma.profile.findUnique({
+        where: { user_id: user.id },
+      })
+      if (!currentUserProfile) return ctx.json({ message: 'Not found' }, 404)
+      const targetUserProfile = await this.prisma.profile.findFirst({
+        where: { id: parseInt(id) },
+      })
+      if (!targetUserProfile) return ctx.json({ message: 'Not found' }, 404)
+      await this.prisma.follow.delete({
+        where: {
+          following_id_followed_by_id: {
+            followed_by_id: currentUserProfile.id,
+            following_id: targetUserProfile.id,
+          },
+        },
+      })
+      return ctx.json({ message: 'Successfully unfollowed user.' }, 201)
+    } catch (error) {
+      throw ctx.json({ message: 'Internal server error' }, 500)
+    }
+  }
+}
