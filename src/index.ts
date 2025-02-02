@@ -3,18 +3,27 @@ import { handle } from 'hono/aws-lambda'
 import { prettyJSON } from 'hono/pretty-json'
 import { serve } from '@hono/node-server'
 import { bearerAuth } from 'hono/bearer-auth'
-import { type JwtVariables } from 'hono/jwt'
 import { getSignedCookie, setSignedCookie } from 'hono/cookie'
 import { appendTrailingSlash } from 'hono/trailing-slash'
 import { UseAuth, UseConfig } from './utils'
+import { zValidator } from '@hono/zod-validator'
+import { z } from 'zod'
+import { AppContextType } from './types'
 import { userModule } from './user/user.module'
+import { authModule } from './auth/auth.module'
+import { profileModule } from './profile/profile.module'
 
 const useAuth = new UseAuth()
 const useConfig = new UseConfig()
 
 const NODE_ENV = process.env.NODE_ENV
 
-const app = new Hono<{ Variables: JwtVariables }>()
+const pioSchema = z.object({
+  name: z.string(),
+  age: z.number(),
+})
+
+const app = new Hono<{ Variables: AppContextType }>()
 const token = 'piopio'
 app
   .use(prettyJSON())
@@ -23,13 +32,26 @@ app
     return e.json({ message: 'Hello from pollito!' }, 200)
   })
   .get('/sign/', async (e) => {
-    const signedCode = await useAuth.signToken('manguitoispollito')
+    const signedCode = await useAuth.signToken(123123123)
     return e.json({ access_token: signedCode })
   })
   .get('/decode/', useAuth.getJwt, async (e) => {
     const token = e.get('jwtPayload')
-    return e.json({ ...token })
+    // const body = e.req.valid('json')
+    console.log(token)
+    // console.log(body)
+    return e.json({ ...token }, 200)
   })
+  .post(
+    '/multi-mid/',
+    useAuth.getJwt,
+    zValidator('json', pioSchema),
+    async (c) => {
+      const token = c.get('jwtPayload')
+      const body = c.req.valid('json')
+      return c.json({ ...body, ...token }, 201)
+    }
+  )
   .get('/set-cookie/', async (e) => {
     await setSignedCookie(
       e,
@@ -50,6 +72,8 @@ app
     return e.json({ message: 'pollito says pip' }, 201)
   })
   .route('/api/user', userModule.setRoute())
+  .route('/api/auth', authModule.setRoute())
+  .route('/api/profile', profileModule.setRoute())
 
 if (NODE_ENV !== 'production') {
   serve(

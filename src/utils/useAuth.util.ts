@@ -12,7 +12,7 @@ export class UseAuth {
     this.config = new UseConfig()
     this.prisma = new PrismaClient()
   }
-  public signToken = async (userId: string | number) => {
+  public signToken = async (userId: number) => {
     const payload = {
       id: userId,
       exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7,
