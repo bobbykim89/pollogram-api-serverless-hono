@@ -12,6 +12,7 @@ import { AppContextType } from './types'
 import { userModule } from './user/user.module'
 import { authModule } from './auth/auth.module'
 import { profileModule } from './profile/profile.module'
+import { postModule } from './post/post.module'
 
 const useAuth = new UseAuth()
 const useConfig = new UseConfig()
@@ -71,9 +72,10 @@ app
     console.log(authHeader)
     return e.json({ message: 'pollito says pip' }, 201)
   })
-  .route('/api/user', userModule.setRoute())
-  .route('/api/auth', authModule.setRoute())
-  .route('/api/profile', profileModule.setRoute())
+  .route('/api/user/', userModule.setRoute())
+  .route('/api/auth/', authModule.setRoute())
+  .route('/api/profile/', profileModule.setRoute())
+  .route('/api/post/', postModule.setRoute())
 
 if (NODE_ENV !== 'production') {
   serve(

@@ -5,6 +5,7 @@ export class UseConfig {
   cloudinaryApiKey: string
   cloudinaryApiSecret: string
   cloudinaryTargetFolder: string
+  databaseUrl: string
 
   public constructor() {
     this.adminSecretPhrase = process.env.ADMIN_SECRET_PHRASE || 'secret phrase'
@@ -13,5 +14,6 @@ export class UseConfig {
     this.cloudinaryApiKey = process.env.CLOUDINARY_API_KEY || ''
     this.cloudinaryApiSecret = process.env.CLOUDINARY_API_SECRET || ''
     this.cloudinaryTargetFolder = process.env.CLOUDINARY_TARGET_FOLDER || ''
+    this.databaseUrl = process.env.DATABASE_URL || ''
   }
 }
