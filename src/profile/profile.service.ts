@@ -4,11 +4,15 @@ import type {
   ProfileUsernameUpdateInput,
   ProfileDescriptionUpdateInput,
 } from './dto'
+import type { MultipartBody } from '../types'
+import { UseMultipartData } from '../utils'
 
 export class ProfileService {
   private prisma: PrismaClient
+  private useMultipartData: UseMultipartData
   constructor() {
     this.prisma = new PrismaClient()
+    this.useMultipartData = new UseMultipartData()
   }
   public getProfileList = async (ctx: Context) => {
     try {
@@ -93,6 +97,31 @@ export class ProfileService {
         data: { profile_description: description },
       })
       return ctx.json({ message: 'Successfully updated profile' }, 201)
+    } catch (error) {
+      throw ctx.json({ message: 'Internal server error' }, 500)
+    }
+  }
+  public updateProfileImage = async (
+    ctx: Context,
+    user: Omit<User, 'password'>,
+    body: MultipartBody
+  ) => {
+    try {
+      const currentUserProfile = await this.prisma.profile.findUnique({
+        where: { user_id: user.id },
+      })
+      if (!currentUserProfile) throw ctx.json({ message: 'Not found' }, 404)
+      const cloudinaryRes = await this.useMultipartData.uploadCloudinary(
+        ctx,
+        body['image'],
+        'profile'
+      )
+      if (!cloudinaryRes) return
+      await this.prisma.profile.update({
+        where: { id: currentUserProfile.id },
+        data: { image_id: cloudinaryRes?.image_id },
+      })
+      return ctx.json({ message: 'Successfully updated profile.' }, 203)
     } catch (error) {
       throw ctx.json({ message: 'Internal server error' }, 500)
     }

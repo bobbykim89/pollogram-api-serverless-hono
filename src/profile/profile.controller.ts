@@ -56,6 +56,18 @@ export class ProfileController {
           )
         }
       )
+      .put(
+        '/current-user/profile-image/',
+        every(this.useAuth.getJwt, this.useAuth.retrieveUserInfo),
+        async (c) => {
+          const body = await c.req.parseBody()
+          const user = c.get('currentUser')
+          return await this.profileService.updateProfileImage(c, user, body)
+          //     console.log(body['image'])
+          //     const image = body['image'] as File
+          //   return c.json({ content: body['content'], img: body['image'] })
+        }
+      )
       .get(
         '/:id/',
         this.useAuth.getJwt,
