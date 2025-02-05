@@ -5,9 +5,9 @@
     "cdk-hono": "bin/cdk-hono.js"
   },
   "scripts": {
-    "dev": "dotenv -e .env -e .env.dev -- ts-node ./src/index.ts",
-    "dev:watch": "dotenv -e .env -e .env.dev -- nodemon ./src/index.ts",
-    "dev:watch:prod": "dotenv -e .env -e .env.prod -- nodemon ./src/index.ts",
+    "dev": "dotenv -e .env -e .env.dev -- ts-node ./src/server.ts",
+    "dev:watch": "dotenv -e .env -e .env.dev -- nodemon ./src/server.ts",
+    "dev:watch:prod": "dotenv -e .env -e .env.prod -- nodemon ./src/server.ts",
     "prisma:generate": "prisma generate",
     "db:prod:migrate:create": "dotenv -e .env -e .env.prod -- prisma migrate dev",
     "db:prod:migrate:deploy": "dotenv -e .env -e .env.prod -- prisma migrate deploy",
@@ -42,6 +42,7 @@
     "typescript": "~5.6.3"
   },
   "dependencies": {
+    "@aws-sdk/client-ssm": "^3.741.0",
     "@hono/zod-validator": "^0.4.2",
     "@neondatabase/serverless": "^0.10.4",
     "@prisma/adapter-neon": "^6.3.0",
