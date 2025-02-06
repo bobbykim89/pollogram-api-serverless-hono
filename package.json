@@ -35,6 +35,9 @@
     "ga:deploy:prod": "cdk deploy Prod/* --require-approval never",
     "ga:deploy:dev": "cdk deploy Dev/* --require-approval never"
   },
+  "prisma": {
+    "schema": "prisma/schema.prisma"
+  },
   "devDependencies": {
     "@hono/node-server": "^1.13.8",
     "@tsconfig/node20": "^20.1.4",
