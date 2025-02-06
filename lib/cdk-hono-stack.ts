@@ -8,20 +8,19 @@ export class CdkHonoStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props)
 
-    // The code that defines your stack goes here
-    const stage: string = process.env.STAGE || 'prod'
-    const pollogramLambdaFn = new NodejsFunction(this, 'PollogramHono', {
+    const stage: string = process.env.STAGE || 'prod' // default 'prod'
+    const pollogramApiFn = new NodejsFunction(this, 'PollogramHono', {
       runtime: Runtime.NODEJS_20_X,
       entry: 'src/handler.ts',
       handler: 'handler',
       environment: {
         NODE_ENV: 'production',
         DATABASE_URL: process.env.DATABASE_URL || '',
+        DATABASE_URL_UNPOOLED: process.env.DATABASE_URL_UNPOOLED || '',
       },
       timeout: cdk.Duration.seconds(10),
       bundling: {
         nodeModules: [],
-        externalModules: ['aws-sdk'],
         minify: true,
         commandHooks: {
           beforeBundling(_inputDir: string, _outputDir: string): string[] {
@@ -41,8 +40,8 @@ export class CdkHonoStack extends cdk.Stack {
       },
     })
 
-    new LambdaRestApi(this, 'PollogramHonoAPIGW', {
-      handler: pollogramLambdaFn,
+    new LambdaRestApi(this, 'PollogramHonoAPIGateway', {
+      handler: pollogramApiFn,
       proxy: true,
       deployOptions: {
         stageName: stage,
