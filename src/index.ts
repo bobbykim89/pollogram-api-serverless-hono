@@ -1,6 +1,8 @@
 import { Hono } from 'hono'
 import { prettyJSON } from 'hono/pretty-json'
 import { appendTrailingSlash } from 'hono/trailing-slash'
+import { neonConfig } from '@neondatabase/serverless'
+import * as ws from 'ws'
 import { userModule } from './user/user.module'
 import { authModule } from './auth/auth.module'
 import { profileModule } from './profile/profile.module'
@@ -9,6 +11,7 @@ import { commentModule } from './comment/comment.module'
 
 export const init = () => {
   const app = new Hono()
+  neonConfig.webSocketConstructor = ws
   return app
     .use(prettyJSON())
     .use(appendTrailingSlash())
