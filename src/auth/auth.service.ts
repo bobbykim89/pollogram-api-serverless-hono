@@ -23,6 +23,20 @@ export class AuthService {
       throw ctx.json({ message: 'Internal server error' }, 500)
     }
   }
+  public getPlaceholder = async (ctx: Context) => {
+    try {
+      return ctx.json({ message: 'A placeholder Pio!' }, 200)
+    } catch (error) {
+      throw ctx.json({ message: 'Internal server error' }, 500)
+    }
+  }
+  public postPlaceholder = async (ctx: Context, dto: AuthInput) => {
+    try {
+      return ctx.json({ message: 'A placeholder Pio!', dto }, 200)
+    } catch (error) {
+      throw ctx.json({ message: 'Internal server error' }, 500)
+    }
+  }
   public loginUser = async (ctx: Context, dto: AuthInput) => {
     try {
       const { email, password } = dto

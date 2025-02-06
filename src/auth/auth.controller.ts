@@ -21,7 +21,11 @@ export class AuthController {
         return await this.authService.getCurrentUser(c, token)
       })
       .get('/pollo/', async (c) => {
-        return c.json({ message: 'A placeholder Pio!' }, 200)
+        return await this.authService.getPlaceholder(c)
+      })
+      .post('/pollo/', zValidator('json', authInputSchema), async (c) => {
+        const body = c.req.valid('json')
+        return await this.authService.postPlaceholder(c, body)
       })
       .post('/login/', zValidator('json', authInputSchema), async (c) => {
         const body = c.req.valid('json')
