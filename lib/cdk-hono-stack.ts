@@ -23,8 +23,8 @@ export class CdkHonoStack extends cdk.Stack {
         nodeModules: [],
         minify: true,
         commandHooks: {
-          beforeBundling(_inputDir: string, _outputDir: string): string[] {
-            return []
+          beforeBundling(inputDir: string, outputDir: string): string[] {
+            return [`cp -r ${inputDir}/prisma ${outputDir}/prisma`]
           },
           beforeInstall(_inputDir: string, _outputDir: string) {
             return ['npx prisma generate']
