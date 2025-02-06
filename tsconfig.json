@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-    "module": "Node16",
+    "module": "CommonJS",
     "lib": ["es2020", "dom"],
     "declaration": true,
     "strict": true,
@@ -17,10 +17,12 @@
     "inlineSources": true,
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,
-    "typeRoots": ["./node_modules/@types", "./src/types"],
+    "typeRoots": ["./node_modules/@types"],
     "baseUrl": "."
   },
   "include": ["src/**/*.ts", "bin/**/*.ts", "lib/**/*.ts"],
-  "extends": "@tsconfig/node20/tsconfig.json",
+  "ts-node": {
+    "files": true
+  },
   "exclude": ["node_modules", "cdk.out"]
 }
