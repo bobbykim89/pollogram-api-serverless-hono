@@ -44,7 +44,6 @@ export class CdkHonoStack extends cdk.Stack {
     const alias = new Alias(this, 'ApiAlias', {
       aliasName: 'pollogram-hono-live',
       version: pollogramApiFn.currentVersion,
-      provisionedConcurrentExecutions: 5,
     })
 
     new LambdaRestApi(this, 'PollogramHonoAPIGateway', {
