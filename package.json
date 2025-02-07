@@ -55,15 +55,12 @@
   "dependencies": {
     "@aws-sdk/client-ssm": "^3.741.0",
     "@hono/zod-validator": "^0.4.2",
-    "@neondatabase/serverless": "^0.10.4",
-    "@prisma/adapter-neon": "^6.3.0",
     "@prisma/client": "^6.3.0",
     "aws-cdk-lib": "2.177.0",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^2.5.1",
     "constructs": "^10.0.0",
     "hono": "^4.6.19",
-    "ws": "^8.18.0",
     "zod": "^3.24.1"
   }
 }
