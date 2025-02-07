@@ -1,13 +1,13 @@
-import type { User } from '@prisma/client'
+import { PrismaClient, type User } from '@prisma/client'
 import { type Context } from 'hono'
 import type { MultipartBody } from '../types'
-import { UseMultipartData, UsePrisma } from '../utils'
+import { UseMultipartData } from '../utils'
 
 export class PostService {
-  private prisma: UsePrisma
+  private prisma: PrismaClient
   private useMultipartData: UseMultipartData
   constructor() {
-    this.prisma = new UsePrisma()
+    this.prisma = new PrismaClient()
     this.useMultipartData = new UseMultipartData()
   }
   public getPostList = async (ctx: Context) => {

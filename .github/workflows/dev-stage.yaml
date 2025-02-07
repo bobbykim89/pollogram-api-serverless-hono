@@ -20,6 +20,7 @@ jobs:
       STAGE: dev
       CLOUDINARY_TARGET_FOLDER: pollogram-api-hono-dev
       DATABASE_URL: ${{ secrets.DATABASE_URL_DEV }}
+      DATABASE_URL_UNPOOLED: ${{ secrets.DATABASE_URL_UNPOOLED_DEV }}
     steps:
       - uses: actions/checkout@v4
         with:
