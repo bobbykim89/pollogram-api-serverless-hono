@@ -1,11 +1,10 @@
-import type { User } from '@prisma/client'
+import { PrismaClient, type User } from '@prisma/client'
 import { type Context } from 'hono'
-import { UsePrisma } from '../utils'
 
 export class CommentService {
-  private prisma: UsePrisma
+  private prisma: PrismaClient
   constructor() {
-    this.prisma = new UsePrisma()
+    this.prisma = new PrismaClient()
   }
   public listComments = async (ctx: Context, postId: string) => {
     try {

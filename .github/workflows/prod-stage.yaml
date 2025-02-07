@@ -24,6 +24,7 @@ jobs:
       STAGE: prod
       CLOUDINARY_TARGET_FOLDER: pollogram-api-hono-prod
       DATABASE_URL: ${{ secrets.DATABASE_URL_PROD }}
+      DATABASE_URL_UNPOOLED: ${{ secrets.DATABASE_URL_UNPOOLED_PROD }}
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js
