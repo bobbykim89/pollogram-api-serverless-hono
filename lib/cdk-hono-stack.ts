@@ -13,7 +13,7 @@ export class CdkHonoStack extends cdk.Stack {
       runtime: Runtime.NODEJS_20_X,
       entry: 'src/handler.ts',
       handler: 'handler',
-      memorySize: 256,
+      // memorySize: 256,
       environment: {
         NODE_ENV: 'production',
         DATABASE_URL: process.env.DATABASE_URL || '',
