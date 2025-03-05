@@ -20,13 +20,6 @@ export class AuthController {
         const token = c.get('jwtPayload')
         return await this.authService.getCurrentUser(c, token)
       })
-      .get('/pollo/', async (c) => {
-        return await this.authService.getPlaceholder(c)
-      })
-      .post('/pollo/', zValidator('json', authInputSchema), async (c) => {
-        const body = c.req.valid('json')
-        return await this.authService.postPlaceholder(c, body)
-      })
       .post('/login/', zValidator('json', authInputSchema), async (c) => {
         const body = c.req.valid('json')
         return await this.authService.loginUser(c, body)

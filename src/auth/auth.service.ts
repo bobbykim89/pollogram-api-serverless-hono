@@ -1,15 +1,14 @@
 import type { Context } from 'hono'
-import { PrismaClient } from '@prisma/client'
 import { UseAuth } from '../utils'
 import type { AuthInput } from './dto'
 import type { TokenPayload } from '../common/dto'
 import * as bcrypt from 'bcryptjs'
+import { BaseService } from '../common/base'
 
-export class AuthService {
-  private prisma: PrismaClient
+export class AuthService extends BaseService {
   private useAuth: UseAuth
   constructor() {
-    this.prisma = new PrismaClient()
+    super()
     this.useAuth = new UseAuth()
   }
   public getCurrentUser = async (ctx: Context, token: TokenPayload) => {
@@ -20,20 +19,6 @@ export class AuthService {
       })
       if (!user) return ctx.json({ message: 'Not found' }, 404)
       return ctx.json(user, 200)
-    } catch (error) {
-      throw ctx.json({ message: 'Internal server error' }, 500)
-    }
-  }
-  public getPlaceholder = async (ctx: Context) => {
-    try {
-      return ctx.json({ message: 'A placeholder Pio!' }, 200)
-    } catch (error) {
-      throw ctx.json({ message: 'Internal server error' }, 500)
-    }
-  }
-  public postPlaceholder = async (ctx: Context, dto: AuthInput) => {
-    try {
-      return ctx.json({ message: 'A placeholder Pio!', dto }, 200)
     } catch (error) {
       throw ctx.json({ message: 'Internal server error' }, 500)
     }
