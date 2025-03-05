@@ -1,5 +1,4 @@
 import { User } from '@prisma/client'
-import { PrismaClient } from '@prisma/client'
 import type { Context } from 'hono'
 import type {
   ProfileUsernameUpdateInput,
@@ -7,12 +6,12 @@ import type {
 } from './dto'
 import type { MultipartBody } from '../types'
 import { UseMultipartData } from '../utils'
+import { BaseService } from '../common/base'
 
-export class ProfileService {
-  private prisma: PrismaClient
+export class ProfileService extends BaseService {
   private useMultipartData: UseMultipartData
   constructor() {
-    this.prisma = new PrismaClient()
+    super()
     this.useMultipartData = new UseMultipartData()
   }
   public getProfileList = async (ctx: Context) => {

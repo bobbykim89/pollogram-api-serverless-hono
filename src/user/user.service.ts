@@ -1,15 +1,14 @@
 import type { Context } from 'hono'
-import { PrismaClient } from '@prisma/client'
 import * as bcrypt from 'bcryptjs'
 import { UseAuth } from '../utils'
 import type { PwUpdateInput, SignupUserInput } from './dto'
 import type { TokenPayload } from '../common/dto'
+import { BaseService } from '../common/base'
 
-export class UserService {
-  private prisma: PrismaClient
+export class UserService extends BaseService {
   private useAuth: UseAuth
   constructor() {
-    this.prisma = new PrismaClient()
+    super()
     this.useAuth = new UseAuth()
   }
   public helloFromPollito = async (ctx: Context) => {
