@@ -1,7 +1,7 @@
 import * as cdk from 'aws-cdk-lib'
 import { Construct } from 'constructs'
 import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs'
-import { Runtime } from 'aws-cdk-lib/aws-lambda'
+import { Runtime, Alias } from 'aws-cdk-lib/aws-lambda'
 import { LambdaRestApi } from 'aws-cdk-lib/aws-apigateway'
 
 export class CdkHonoStack extends cdk.Stack {
@@ -13,6 +13,7 @@ export class CdkHonoStack extends cdk.Stack {
       runtime: Runtime.NODEJS_20_X,
       entry: 'src/handler.ts',
       handler: 'handler',
+      // memorySize: 256,
       environment: {
         NODE_ENV: 'production',
         DATABASE_URL: process.env.DATABASE_URL || '',
@@ -40,11 +41,18 @@ export class CdkHonoStack extends cdk.Stack {
       },
     })
 
+    const alias = new Alias(this, 'ApiAlias', {
+      aliasName: 'pollogram-hono-live',
+      version: pollogramApiFn.currentVersion,
+    })
+
     new LambdaRestApi(this, 'PollogramHonoAPIGateway', {
-      handler: pollogramApiFn,
+      handler: alias,
       proxy: true,
       deployOptions: {
         stageName: stage,
+        cachingEnabled: true,
+        cacheTtl: cdk.Duration.minutes(5),
       },
     })
   }
