@@ -1,4 +1,4 @@
-import { UsePrisma, UseConfig } from '../../utils'
+import { UseConfig, UsePrisma } from '../../utils'
 
 export class BaseService {
   config: UseConfig
