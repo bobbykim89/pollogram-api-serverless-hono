@@ -6,14 +6,14 @@
 
 generator client {
   provider = "prisma-client-js"
-  previewFeatures = ["driverAdapters"]
-  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+  previewFeatures = ["queryCompiler", "driverAdapters"]
+  output          = "../src/db/prisma"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  directUrl = env("DATABASE_URL_UNPOOLED")
+  // directUrl = env("DATABASE_URL_UNPOOLED")
 }
 
 enum User_Role {

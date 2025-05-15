@@ -1,8 +1,10 @@
-import { PrismaClient } from '@prisma/client'
+import { UsePrisma, UseConfig } from '../../utils'
 
 export class BaseService {
-  prisma: PrismaClient
+  config: UseConfig
+  prisma: UsePrisma
   constructor() {
-    this.prisma = new PrismaClient()
+    this.config = new UseConfig()
+    this.prisma = new UsePrisma(this.config)
   }
 }
