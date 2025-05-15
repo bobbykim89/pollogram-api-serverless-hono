@@ -8,8 +8,8 @@ import { postModule } from './post/post.module'
 import { commentModule } from './comment/comment.module'
 import { UsePrisma, UseConfig } from './utils'
 
-const config = new UseConfig()
-const usePrisma = new UsePrisma(config)
+const useConfig = new UseConfig()
+const usePrisma = new UsePrisma(useConfig)
 usePrisma.warmup()
 
 export const init = () => {

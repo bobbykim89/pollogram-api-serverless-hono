@@ -1,16 +1,16 @@
 import { sign, jwt } from 'hono/jwt'
 import { createMiddleware } from 'hono/factory'
-import { PrismaClient } from '../db/prisma'
 import * as bcrypt from 'bcryptjs'
 import { UseConfig } from './useConfig.util'
 import { AppContextType } from '../types'
+import { UsePrisma } from './usePrisma.util'
 
 export class UseAuth {
   private config: UseConfig
-  private prisma: PrismaClient
+  private prisma: UsePrisma
   constructor() {
     this.config = new UseConfig()
-    this.prisma = new PrismaClient()
+    this.prisma = new UsePrisma(this.config)
   }
   public signToken = async (userId: number) => {
     const payload = {
