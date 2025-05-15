@@ -1,6 +1,6 @@
 import { sign, jwt } from 'hono/jwt'
 import { createMiddleware } from 'hono/factory'
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '../db/prisma'
 import * as bcrypt from 'bcryptjs'
 import { UseConfig } from './useConfig.util'
 import { AppContextType } from '../types'
