@@ -1,4 +1,4 @@
-import { type User } from '@prisma/client'
+import { type User } from '../db/prisma'
 import { type Context } from 'hono'
 import type { MultipartBody } from '../types'
 import { UseMultipartData } from '../utils'
