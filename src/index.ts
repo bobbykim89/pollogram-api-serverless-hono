@@ -6,9 +6,10 @@ import { authModule } from './auth/auth.module'
 import { profileModule } from './profile/profile.module'
 import { postModule } from './post/post.module'
 import { commentModule } from './comment/comment.module'
-import { UsePrisma } from './utils'
+import { UsePrisma, UseConfig } from './utils'
 
-const usePrisma = new UsePrisma()
+const config = new UseConfig()
+const usePrisma = new UsePrisma(config)
 usePrisma.warmup()
 
 export const init = () => {
