@@ -23,20 +23,21 @@ export class CdkHonoStack extends cdk.Stack {
       bundling: {
         nodeModules: [],
         minify: true,
-        // commandHooks: {
-        //   beforeBundling(_inputDir: string, _outputDir: string): string[] {
-        //     return []
-        //   },
-        //   beforeInstall(_inputDir: string, _outputDir: string) {
-        //     return ['npx prisma generate']
-        //   },
-        //   afterBundling(inputDir: string, outputDir: string): string[] {
-        //     return [
-        //       `cp ${inputDir}/node_modules/.prisma/client/libquery_engine-rhel-openssl-3.0.x.so.node ${outputDir}`,
-        //       `cp ${inputDir}/prisma/schema.prisma ${outputDir}`,
-        //     ]
-        //   },
-        // },
+        commandHooks: {
+          beforeBundling(_inputDir: string, _outputDir: string): string[] {
+            return []
+          },
+          beforeInstall(_inputDir: string, _outputDir: string) {
+            return ['npx prisma generate']
+          },
+          afterBundling(inputDir: string, outputDir: string): string[] {
+            return [
+              // `cp ${inputDir}/node_modules/.prisma/client/libquery_engine-rhel-openssl-3.0.x.so.node ${outputDir}`,
+              `cp -R ${inputDir}/src/db/prisma/ ${outputDir}`,
+              `cp ${inputDir}/prisma/schema.prisma ${outputDir}`,
+            ]
+          },
+        },
         forceDockerBundling: false,
       },
     })
