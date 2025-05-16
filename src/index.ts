@@ -7,12 +7,14 @@ import { profileModule } from './profile/profile.module'
 import { postModule } from './post/post.module'
 import { commentModule } from './comment/comment.module'
 import { UsePrisma, UseConfig } from './utils'
-
-const useConfig = new UseConfig()
-const usePrisma = new UsePrisma(useConfig)
-usePrisma.warmup()
+import { neonConfig } from '@neondatabase/serverless'
+import * as ws from 'ws'
 
 export const init = () => {
+  neonConfig.webSocketConstructor = ws
+  const useConfig = new UseConfig()
+  const usePrisma = new UsePrisma(useConfig)
+  usePrisma.warmup()
   const app = new Hono()
   app
     .use(prettyJSON())
