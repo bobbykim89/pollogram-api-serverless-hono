@@ -32,7 +32,7 @@ export class CdkHonoStack extends cdk.Stack {
           },
           afterBundling(inputDir: string, outputDir: string): string[] {
             return [
-              `cp ${inputDir}/node_modules/.prisma/client/libquery_engine-rhel-openssl-3.0.x.so.node ${outputDir}`,
+              `cp ${inputDir}/src/db/prisma/query_compiler_bg.wasm ${outputDir}`,
               `cp ${inputDir}/prisma/schema.prisma ${outputDir}`,
             ]
           },

@@ -1,4 +1,4 @@
-import { User } from '@prisma/client'
+import { User } from '../db/prisma'
 import type { Context } from 'hono'
 import type {
   ProfileUsernameUpdateInput,
