@@ -36,5 +36,7 @@ jobs:
           cache: 'pnpm'
       - name: Install dependencies
         run: pnpm install
+      - name: Generate prisma client
+        run: pnpm prisma:generate
       - name: Deploy
         run: pnpm ga:deploy:dev
