@@ -37,8 +37,8 @@ jobs:
           node-version: '20.14'
           cache: 'pnpm'
       - name: Install dependencies
-        run: npm install
+        run: pnpm install
       - name: Generate prisma client
         run: pnpm prisma:generate
       - name: Deploy
-        run: npm run ga:deploy:prod
+        run: pnpm run ga:deploy:prod
