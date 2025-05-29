@@ -32,17 +32,33 @@ export class PostService extends BaseService {
       throw ctx.json({ message: 'Internal server error' }, 500)
     }
   }
-  // TODO: add create new post
   public createPost = async (
     ctx: Context,
     user: Omit<User, 'password'>,
     body: MultipartBody
   ) => {
     try {
-      const currentUserProfile = this.prisma.profile.findUnique({
+      const currentUserProfile = await this.prisma.profile.findUnique({
         where: { user_id: user.id },
       })
       if (!currentUserProfile) throw ctx.json({ message: 'Not found' }, 404)
+      const cloudinaryRes = await this.useMultipartData.uploadCloudinary(
+        ctx,
+        body['image'],
+        'post'
+      )
+      const bodyText: string =
+        typeof body['text'] === 'string' ? body['text'] : ''
+      if (!cloudinaryRes)
+        throw ctx.json({ message: 'Failed to upload image.' }, 408)
+      await this.prisma.post.create({
+        data: {
+          image_id: cloudinaryRes.image_id,
+          text: bodyText,
+          profile_id: currentUserProfile.id,
+        },
+      })
+      return ctx.json({ message: 'Successfully created a new post' }, 201)
     } catch (error) {
       throw ctx.json({ message: 'Internal server error' }, 500)
     }
