@@ -12,7 +12,7 @@ export class PostService extends BaseService {
   }
   public getPostList = async (ctx: Context) => {
     try {
-      const postList = this.prisma.post.findMany({
+      const postList = await this.prisma.post.findMany({
         orderBy: { created_at: 'desc' },
       })
       return ctx.json(postList, 200)
